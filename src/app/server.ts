@@ -8,7 +8,7 @@ dotenv.config();
 let server: Server;
 const port = process.env.PORT || 5000;
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.k53g2.mongodb.net/advance-note-app?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.k53g2.mongodb.net/Library-Management?retryWrites=true&w=majority&appName=Cluster0`;
 
 async function main() {
   try {
