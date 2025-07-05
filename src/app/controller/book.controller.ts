@@ -76,16 +76,32 @@ bookRoutes.get("/books", async (req: Request, res: Response) => {
       sortBy = "createdAt",
       sort = "desc",
       limit = "10",
+      page = "1",
     } = req.query;
 
-    const books = await Book.find(filter ? { genre: filter } : {})
+    const pageNumber = parseInt(page as string, 10);
+    const limitNumber = parseInt(limit as string, 10);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const query = filter ? { genre: filter } : {};
+
+    const totalCount = await Book.countDocuments(query);
+
+    const books = await Book.find(query)
       .sort({ [sortBy as string]: sort === "desc" ? -1 : 1 })
-      .limit(parseInt(limit as string));
+      .skip(skip)
+      .limit(limitNumber);
 
     res.status(200).json({
       success: true,
       message: "Books retrieved successfully",
       data: books,
+      pagination: {
+        total: totalCount,
+        page: pageNumber,
+        limit: limitNumber,
+        totalPages: Math.ceil(totalCount / limitNumber),
+      },
     });
   } catch (error: any) {
     res.status(404).json({
